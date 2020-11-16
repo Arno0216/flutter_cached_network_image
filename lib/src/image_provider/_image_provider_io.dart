@@ -9,8 +9,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../../cached_network_image.dart' show ImageRenderMethodForWeb;
 import 'cached_network_image_provider.dart' as image_provider;
 
-class CachedNetworkImageProvider
-    extends ImageProvider<image_provider.CachedNetworkImageProvider>
+class CachedNetworkImageProvider extends ImageProvider<image_provider.CachedNetworkImageProvider>
     implements image_provider.CachedNetworkImageProvider {
   /// Creates an ImageProvider which loads an image from the [url], using the [scale].
   /// When the image fails to load [errorListener] is called.
@@ -45,14 +44,12 @@ class CachedNetworkImageProvider
   final Map<String, String> headers;
 
   @override
-  Future<CachedNetworkImageProvider> obtainKey(
-      ImageConfiguration configuration) {
+  Future<CachedNetworkImageProvider> obtainKey(ImageConfiguration configuration) {
     return SynchronousFuture<CachedNetworkImageProvider>(this);
   }
 
   @override
-  ImageStreamCompleter load(
-      image_provider.CachedNetworkImageProvider key, DecoderCallback decode) {
+  ImageStreamCompleter load(image_provider.CachedNetworkImageProvider key, DecoderCallback decode) {
     final chunkEvents = StreamController<ImageChunkEvent>();
     return MultiImageStreamCompleter(
       codec: _loadAsync(key, chunkEvents, decode),
@@ -76,8 +73,7 @@ class CachedNetworkImageProvider
     assert(key == this);
     try {
       var mngr = cacheManager ?? DefaultCacheManager();
-      await for (var result in mngr.getFileStream(key.url,
-          withProgress: true, headers: headers)) {
+      await for (var result in mngr.getFileStream(key.url, withProgress: true, headers: headers)) {
         if (result is DownloadProgress) {
           chunkEvents.add(ImageChunkEvent(
             cumulativeBytesLoaded: result.downloaded,
@@ -100,7 +96,7 @@ class CachedNetworkImageProvider
       });
 
       errorListener?.call();
-      rethrow;
+      // print(e.toString());
     } finally {
       await chunkEvents.close();
     }
